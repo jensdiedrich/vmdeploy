@@ -29,4 +29,3 @@ else
 	Write-Host "There is no Unallocated space to extend OS Drive Partition size"
 	}
 Stop-Transcript
-}  
