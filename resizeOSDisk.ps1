@@ -1,5 +1,5 @@
 # Start logging the actions 
-Start-Transcript -Path C:\Temp\dsclog.txt -Append -Force
+Start-Transcript -Path C:\Temp\resize-system-disk.txt -Append -Force
 
 # Get OS Disk
 $disk = get-disk | where-object {$_.IsBoot -eq "true" -and $_.IsSystem -eq "true"}
@@ -29,4 +29,3 @@ else
 	Write-Host "There is no Unallocated space to extend OS Drive Partition size"
 	}
 Stop-Transcript
-
