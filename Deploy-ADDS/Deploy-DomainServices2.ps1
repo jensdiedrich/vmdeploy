@@ -5,7 +5,7 @@
 # Install-Module -name StorageDsc
 # Publish-AzVMDscConfiguration ".\Deploy-DomainServices2.ps1" -OutputArchivePath ".\Deploy-DomainServices2.ps1.zip"
 
-configuration CreateADPDC
+configuration Deploy-DomainServices
 {
    param
    (
@@ -71,9 +71,9 @@ configuration CreateADPDC
         }
 
         Disk ADDataDisk {
-            DiskId = 2
+            DiskId = 3
             DriveLetter = "E"
-            DependsOn = "[xWaitForDisk]Disk2"
+            DependsOn = "[WaitForDisk]Disk2"
         }
 
         WindowsFeature ADDSInstall
@@ -108,7 +108,7 @@ configuration CreateADPDC
             DependsOn = @("[WindowsFeature]ADDSInstall", "[xDisk]ADDataDisk")
         }
 
-        xPendingReboot RebootAfterPromotion{
+        PendingReboot RebootAfterPromotion{
             Name = "RebootAfterPromotion"
             DependsOn = "[xADDomain]FirstDS"
         }
