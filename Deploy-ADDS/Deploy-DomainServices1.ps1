@@ -1,7 +1,3 @@
-# Install-Module -name PSDesiredStateConfiguration
-# Install-Module -name ActiveDirectoryDsc
-# Install-Module -name ComputerManagementDsc
-# Install-Module -name NetworkingDsc
 # Publish-AzVMDscConfiguration ".\Deploy-DomainServices1.ps1" -OutputArchivePath ".\Deploy-DomainServices1.ps1.zip" -Force
 
 Configuration Deploy-DomainServices
@@ -15,7 +11,7 @@ Configuration Deploy-DomainServices
         [System.Management.Automation.PSCredential] $adminCredential,
 
         [Parameter()]
-        [String] $ADDSFilePath = "C:"
+        [String] $ADDSFilePath = "C:\Windows"
     )
 
     Import-DscResource -ModuleName 'PSDesiredStateConfiguration'
@@ -36,6 +32,7 @@ Configuration Deploy-DomainServices
         {
             ConfigurationMode = 'ApplyOnly'
             RebootNodeIfNeeded = $true
+            ActionAfterReboot = 'ContinueConfiguration'
         }
 
         WindowsFeature InstallDNS 
@@ -86,9 +83,9 @@ Configuration Deploy-DomainServices
             Credential = $domainCredential
             SafemodeAdministratorPassword = $domainCredential
             ForestMode = 'WinThreshold'
-            DatabasePath = '$ADDSFilePath\NTDS'
-            LogPath = '$ADDSFilePath\NTDS'
-            SysvolPath = '$ADDSFilePath\SYSVOL'
+            DatabasePath = "$ADDSFilePath\NTDS"
+            LogPath = "$ADDSFilePath\NTDS"
+            SysvolPath = "$ADDSFilePath\SYSVOL"
             DependsOn = '[DnsServerAddress]SetDNS', '[WindowsFeature]InstallADDS'
         }
 
