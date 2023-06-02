@@ -1,4 +1,11 @@
-# Publish-AzVMDscConfiguration ".\Deploy-DomainServices1.ps1" -OutputArchivePath ".\Deploy-DomainServices1.ps1.zip" -Force
+# Install-PackageProvider -Name NuGet -Force
+# Set-PSRepository -Name 'PSGallery' -InstallationPolicy Trusted
+# Install-Module -name PSDesiredStateConfiguration
+# Install-Module -name ActiveDirectoryDsc -force
+# Install-Module -name ComputerManagementDsc -force
+# Install-Module -name NetworkingDsc -force
+# Install-Module -Name DnsServerDsc -force
+# Publish-AzVMDscConfiguration ".\Deploy-DomainServices1.ps1" -OutputArchivePath ".\Deploy-DomainServices1.ps1.zip"
 
 Configuration Deploy-DomainServices
 {
@@ -11,13 +18,17 @@ Configuration Deploy-DomainServices
         [System.Management.Automation.PSCredential] $adminCredential,
 
         [Parameter()]
-        [String] $ADDSFilePath = "C:\Windows"
+        [String] $ADDSFilePath = "C:\Windows",
+
+        [Parameter()]
+        [Array] $DNSForwarder = @()
     )
 
     Import-DscResource -ModuleName 'PSDesiredStateConfiguration'
     Import-DscResource -ModuleName 'ActiveDirectoryDsc'
     Import-DscResource -ModuleName 'ComputerManagementDsc'
     Import-DscResource -ModuleName 'NetworkingDsc'
+    Import-DscResource -ModuleName 'DnsServerDsc'
 
     # Create the NetBIOS name and domain credentials based on the domain FQDN
     [String] $domainNetBIOSName = (Get-NetBIOSName -DomainFQDN $domainFQDN)
@@ -54,6 +65,13 @@ Configuration Deploy-DomainServices
             InterfaceAlias = $interfaceAlias
             AddressFamily = 'IPv4'
             DependsOn = '[WindowsFeature]InstallDNS'
+        }
+
+        DnsServerForwarder SetDNSForwarder
+        {
+            IsSingleInstance = 'Yes'
+            IPAddresses      = $DNSForwarder
+            UseRootHint      = $false
         }
 
         WindowsFeature InstallADDS
