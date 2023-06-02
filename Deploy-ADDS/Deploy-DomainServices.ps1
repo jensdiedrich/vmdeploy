@@ -5,7 +5,7 @@
 # Install-Module -name ComputerManagementDsc -force
 # Install-Module -name NetworkingDsc -force
 # Install-Module -Name DnsServerDsc -force
-# Publish-AzVMDscConfiguration ".\Deploy-DomainServices1.ps1" -OutputArchivePath ".\Deploy-DomainServices1.ps1.zip"
+# Publish-AzVMDscConfiguration ".\Deploy-DomainServices.ps1" -OutputArchivePath ".\Deploy-DomainServices.ps1.zip" -Force
 
 Configuration Deploy-DomainServices
 {
@@ -72,6 +72,7 @@ Configuration Deploy-DomainServices
             IsSingleInstance = 'Yes'
             IPAddresses      = $DNSForwarder
             UseRootHint      = $false
+            DependsOn = '[WindowsFeature]InstallDNS'
         }
 
         WindowsFeature InstallADDS
