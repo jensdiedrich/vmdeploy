@@ -50,17 +50,17 @@ Configuration Deploy-RDSHost
             DependsOn = "[Computer]JoinDomain"
         }
 
-        WindowsFeature InstallRDSSH
+        WindowsFeature InstallRDSSHost
         {
             Ensure = 'Present'
             Name = 'RDS-RD-Server'
             DependsOn = '[PendingReboot]RebootAfterJoiningDomain'
         }
 
-        PendingReboot RebootAfterJoiningDomain
+        PendingReboot RebootAfterInstallRDSSHost
         {
-            Name = 'RebootAfterJoiningDomain'
-            DependsOn = "[WindowsFeature]InstallRDSSH"
+            Name = 'RebootAfterInstallRDSSHost'
+            DependsOn = "[WindowsFeature]InstallRDSSHost"
         }
     }
 }
