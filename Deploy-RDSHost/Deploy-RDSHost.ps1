@@ -41,7 +41,7 @@ Configuration Deploy-RDSHost
         {
             Name = $computerName 
             DomainName = $domainFQDN
-            Credential = $domainCredential
+            Credential = $adminCredential
         }
 
         PendingReboot RebootAfterJoiningDomain
