@@ -24,7 +24,9 @@ Configuration Deploy-RDSHost
 
     # Create the NetBIOS name and domain credentials based on the domain FQDN
     [String] $domainNetBIOSName = (Get-NetBIOSName -DomainFQDN $domainFQDN)
-    [System.Management.Automation.PSCredential] $domainCredential = New-Object System.Management.Automation.PSCredential ("${domainNetBIOSName}\$($adminCredential.UserName)", $adminCredential.Password)
+    # [System.Management.Automation.PSCredential] $domainCredential = New-Object System.Management.Automation.PSCredential ("${domainNetBIOSName}\$($adminCredential.UserName)", $adminCredential.Password)
+    [System.Management.Automation.PSCredential] $domainCredential = New-Object System.Management.Automation.PSCredential ("x12966dom\$($adminCredential.UserName)", $adminCredential.Password)
+
 
     $interface = Get-NetAdapter | Where-Object Name -Like "Ethernet*" | Select-Object -First 1
     $interfaceAlias = $($interface.Name)
@@ -41,7 +43,7 @@ Configuration Deploy-RDSHost
         {
             Name = $computerName 
             DomainName = $domainFQDN
-            Credential = $adminCredential
+            Credential = $domainCredential
         }
 
         PendingReboot RebootAfterJoiningDomain
