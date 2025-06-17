@@ -48,6 +48,9 @@ http {
             proxy_set_header X-Forwarded-For `$proxy_add_x_forwarded_for;
             proxy_set_header X-Real-IP `$remote_addr;
         }
+	location /.well-known {
+	    root html;
+        }
         error_page   500 502 503 504  /50x.html;
         location = /50x.html {
             root   html;
@@ -64,6 +67,7 @@ Expand-Archive e:\win-acme.zip e:\win-acme
 Invoke-WebRequest 'https://github.com/simple-acme/simple-acme/releases/download/v2.3.2/simple-acme.v2.3.2.1981.win-x64.pluggable.zip' -OutFile 'e:\simple-acme.zip'
 Expand-Archive e:\simple-acme.zip e:\simple-acme
 New-Item -ItemType Directory -Path e:\nginx\conf\ssl
+New-Item -ItemType Directory -Path e:\nginx\html\.well-known
 
 e:\simple-acme\wacs.exe --baseuri https://acme-staging-v02.api.letsencrypt.org/directory --verbose --accepttos --emailaddress jens.diedrich@hh-software.com --source manual --host s-99999-001.demo-cloud.eu --validation filesystem --webroot e:\nginx\html --store pemfiles --pemfilespath e:\nginx\conf\ssl --pemfilesname server
 
@@ -95,6 +99,9 @@ http {
             proxy_pass http://ifconfig.me;
             proxy_set_header X-Forwarded-For `$proxy_add_x_forwarded_for;
             proxy_set_header X-Real-IP `$remote_addr;
+        }
+	location /.well-known {
+	    root html;
         }
         error_page   500 502 503 504  /50x.html;
         location = /50x.html {
