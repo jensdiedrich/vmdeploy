@@ -59,4 +59,10 @@ http {
 e:\nginx\nssm.exe install nginx e:\nginx\nginx.exe
 e:\nginx\nssm.exe start nginx
 
+Invoke-WebRequest 'https://github.com/win-acme/win-acme/releases/download/v2.2.9.1701/win-acme.v2.2.9.1701.x64.pluggable.zip' -OutFile 'e:\win-acme.zip'
+Expand-Archive e:\win-acme.zip e:\win-acme
+Invoke-WebRequest 'https://github.com/simple-acme/simple-acme/releases/download/v2.3.2/simple-acme.v2.3.2.1981.win-x64.pluggable.zip' -OutFile 'e:\simple-acme.zip'
+Expand-Archive e:\simple-acme.zip e:\simple-acme
+New-Item -ItemType Directory -Path e:\nginx\conf\ssl
+
 Stop-Transcript
