@@ -65,6 +65,8 @@ Invoke-WebRequest 'https://github.com/simple-acme/simple-acme/releases/download/
 Expand-Archive e:\simple-acme.zip e:\simple-acme
 New-Item -ItemType Directory -Path e:\nginx\conf\ssl
 
+e:\simple-acme\wacs.exe --baseuri https://acme-staging-v02.api.letsencrypt.org/directory --verbose --accepttos --emailaddress jens.diedrich@hh-software.com --source manual --host s-99999-001.demo-cloud.eu --validation filesystem --webroot e:\nginx\html --store pemfiles --pemfilespath e:\nginx\conf\ssl --pemfilesname server
+
 @"
 events {
     worker_connections  1024;
