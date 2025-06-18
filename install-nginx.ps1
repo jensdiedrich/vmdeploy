@@ -1,8 +1,8 @@
 # Install Nginx with SSL support on Windows using PowerShell
 
 param(
-    [Parameter(Mandatory=$true)]
-    [string]$hostname
+    [Parameter(Mandatory=$false)]
+    [string]$hostname = "s-99999-001"
 )
 
 Start-Transcript -Path "e:\install-nginx.log" -Append
