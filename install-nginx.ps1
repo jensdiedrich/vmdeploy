@@ -2,7 +2,7 @@
 
 param(
     [Parameter(Mandatory=$false)]
-    [string]$hostname = "s-99999-001a.demo-cloud.eu"
+    [string]$hostname
 )
 
 Start-Transcript -Path "e:\install-nginx.log" -Append
