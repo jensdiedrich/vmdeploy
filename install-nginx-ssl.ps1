@@ -78,7 +78,7 @@ Expand-Archive e:\simple-acme.zip e:\simple-acme
 New-Item -ItemType Directory -Path e:\nginx\conf\ssl
 New-Item -ItemType Directory -Path e:\nginx\html\.well-known
 
-e:\simple-acme\wacs.exe --baseuri https://acme-staging-v02.api.letsencrypt.org/directory --verbose --accepttos --emailaddress noreply@hh-software.com --source manual --host $hostname --validation filesystem --webroot e:\nginx\html --store pemfiles --pemfilespath e:\nginx\conf\ssl --pemfilesname $hostname
+# e:\simple-acme\wacs.exe --baseuri https://acme-staging-v02.api.letsencrypt.org/directory --verbose --accepttos --emailaddress noreply@hh-software.com --source manual --host $hostname --validation filesystem --webroot e:\nginx\html --store pemfiles --pemfilespath e:\nginx\conf\ssl --pemfilesname $hostname
 
 @"
 events {
