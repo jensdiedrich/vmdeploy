@@ -1,3 +1,12 @@
+# Install Nginx with SSL support on Windows using PowerShell
+
+param(
+    [Parameter(Mandatory=$true)]
+    [string]$hostname
+)
+
+Start-Transcript -Path "e:\install-nginx.log" -Append
+
 # Firewall config
 netsh advfirewall firewall add rule name="http" dir=in action=allow protocol=TCP localport=80
 netsh advfirewall firewall add rule name="https" dir=in action=allow protocol=TCP localport=443
@@ -69,7 +78,7 @@ Expand-Archive e:\simple-acme.zip e:\simple-acme
 New-Item -ItemType Directory -Path e:\nginx\conf\ssl
 New-Item -ItemType Directory -Path e:\nginx\html\.well-known
 
-e:\simple-acme\wacs.exe --baseuri https://acme-staging-v02.api.letsencrypt.org/directory --verbose --accepttos --emailaddress jens.diedrich@hh-software.com --source manual --host s-99999-001.demo-cloud.eu --validation filesystem --webroot e:\nginx\html --store pemfiles --pemfilespath e:\nginx\conf\ssl --pemfilesname server
+e:\simple-acme\wacs.exe --baseuri https://acme-staging-v02.api.letsencrypt.org/directory --verbose --accepttos --emailaddress noreply@hh-software.com --source manual --host $hostname --validation filesystem --webroot e:\nginx\html --store pemfiles --pemfilespath e:\nginx\conf\ssl --pemfilesname $hostname
 
 @"
 events {
@@ -111,8 +120,8 @@ http {
     server {
         listen       $FirstIp`:443 ssl;
         
-        ssl_certificate      ssl/server-chain.pem;
-        ssl_certificate_key  ssl/server-key.pem;
+        ssl_certificate      ssl/$hostname-chain.pem;
+        ssl_certificate_key  ssl/$hostname-key.pem;
 
         ssl_session_cache    shared:SSL:1m;
         ssl_session_timeout  5m;
