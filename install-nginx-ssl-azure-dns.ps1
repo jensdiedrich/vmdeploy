@@ -2,8 +2,12 @@
 # Let´s Encrypt Azure DNS validation
 
 param(
-    [Parameter(Mandatory=$false)]
-    [string]$hostname
+    [Parameter(Mandatory)]
+    [string]$hostname,
+    [Parameter(Mandatory)]
+    [string]$tenantId,
+    [Parameter(Mandatory)]
+    [string]$subscriptionId
 )
 
 Start-Transcript -Path "e:\install-nginx.log" -Append
@@ -84,9 +88,9 @@ New-Item -ItemType Directory -Path e:\nginx\html\.well-known
 
 # e:\simple-acme\wacs.exe --baseuri https://acme-staging-v02.api.letsencrypt.org/directory --verbose --accepttos --emailaddress noreply@hh-software.com --source manual --host $hostname --validation filesystem --webroot e:\nginx\html --store pemfiles --pemfilespath e:\nginx\conf\ssl --pemfilesname $hostname
 e:\simple-acme\wacs.exe --baseuri https://acme-staging-v02.api.letsencrypt.org/directory --verbose `
---accepttos --emailaddress noreply@noreply.org --source manual --host $hostname --validationmode dns-01 --validation azure --azuretenantid 913680c0-0a83-46d5-b2a5-375d5cbe959f `
+--accepttos --emailaddress noreply@noreply.org --source manual --host $hostname --validationmode dns-01 --validation azure --azuretenantid $tenantId `
 --store pemfiles --pemfilespath e:\nginx\conf\ssl --pemfilesname $hostname `
---azuresubscriptionid 36766188-d9c1-426d-a99b-d6dc9c455174 --azureresourcegroupname rg-mgmt-001-prod --azurehostedzone demo-cloud.eu --azureusemsi  --nocache
+--azuresubscriptionid $subscriptionId --azureresourcegroupname rg-mgmt-001-prod --azurehostedzone demo-cloud.eu --azureusemsi  --nocache
 
 @"
 events {
