@@ -88,9 +88,9 @@ New-Item -ItemType Directory -Path e:\nginx\html\.well-known
 
 # e:\simple-acme\wacs.exe --baseuri https://acme-staging-v02.api.letsencrypt.org/directory --verbose --accepttos --emailaddress noreply@hh-software.com --source manual --host $hostname --validation filesystem --webroot e:\nginx\html --store pemfiles --pemfilespath e:\nginx\conf\ssl --pemfilesname $hostname
 e:\simple-acme\wacs.exe --baseuri https://acme-staging-v02.api.letsencrypt.org/directory --verbose `
---accepttos --emailaddress noreply@noreply.org --source manual --host $hostname --validationmode dns-01 --validation azure --azuretenantid $tenantId `
+--accepttos --emailaddress noreply@noreply.org --source manual --host $hostname --validationmode dns-01 --validation azure  `
 --store pemfiles --pemfilespath e:\nginx\conf\ssl --pemfilesname $hostname `
---azuresubscriptionid $subscriptionId --azureresourcegroupname rg-mgmt-001-prod --azurehostedzone demo-cloud.eu --azureusemsi  --nocache
+--azuretenantid $tenantId --azuresubscriptionid $subscriptionId --azureusemsi
 
 @"
 events {
