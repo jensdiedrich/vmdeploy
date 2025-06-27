@@ -5,6 +5,8 @@ param(
     [Parameter(Mandatory)]
     [string]$hostname,
     [Parameter(Mandatory)]
+    [string]$KeyVaultName,
+    [Parameter(Mandatory)]
     [string]$tenantId,
     [Parameter(Mandatory)]
     [string]$subscriptionId
@@ -86,15 +88,16 @@ Expand-Archive e:\simple-acme-azure-dns-plugin.zip e:\simple-acme
 New-Item -ItemType Directory -Path e:\nginx\conf\ssl
 New-Item -ItemType Directory -Path e:\nginx\html\.well-known
 
-# e:\simple-acme\wacs.exe --baseuri https://acme-staging-v02.api.letsencrypt.org/directory --verbose `
+e:\simple-acme\wacs.exe --baseuri https://acme-staging-v02.api.letsencrypt.org/directory --verbose `
+ --accepttos --emailaddress noreply@noreply.org --source manual --host $hostname --validationmode dns-01 --validation azure  `
+ --store pemfiles,keyvault --pemfilespath e:\nginx\conf\ssl --pemfilesname $hostname `
+ --vaultname $keyVaultName --certificatename $hostname.Replace('.','-') `
+ --azuretenantid $tenantId --azuresubscriptionid $subscriptionId --azureusemsi
+
+# e:\simple-acme\wacs.exe --verbose `
 # --accepttos --emailaddress noreply@noreply.org --source manual --host $hostname --validationmode dns-01 --validation azure  `
 # --store pemfiles --pemfilespath e:\nginx\conf\ssl --pemfilesname $hostname `
-#--azuretenantid $tenantId --azuresubscriptionid $subscriptionId --azureusemsi
-
-e:\simple-acme\wacs.exe --verbose `
- --accepttos --emailaddress noreply@noreply.org --source manual --host $hostname --validationmode dns-01 --validation azure  `
- --store pemfiles --pemfilespath e:\nginx\conf\ssl --pemfilesname $hostname `
- --azuretenantid $tenantId --azuresubscriptionid $subscriptionId --azureusemsi
+# --azuretenantid $tenantId --azuresubscriptionid $subscriptionId --azureusemsi
 
 @"
 events {
