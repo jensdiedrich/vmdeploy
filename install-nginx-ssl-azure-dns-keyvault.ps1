@@ -84,7 +84,8 @@ Invoke-WebRequest 'https://github.com/simple-acme/simple-acme/releases/download/
 Expand-Archive e:\simple-acme.zip e:\simple-acme
 Invoke-WebRequest 'https://github.com/simple-acme/simple-acme/releases/download/v2.3.2/plugin.validation.dns.azure.v2.3.2.1981.zip' -OutFile 'e:\simple-acme-azure-dns-plugin.zip'
 Expand-Archive e:\simple-acme-azure-dns-plugin.zip e:\simple-acme
-
+Invoke-WebRequest 'https://github.com/simple-acme/simple-acme/releases/download/v2.3.2/plugin.store.keyvault.v2.3.2.1981.zip' -OutFile 'e:\simple-acme-keyvault-plugin.zip'
+Expand-Archive e:\simple-acme-keyvault-plugin.zip e:\simple-acme
 New-Item -ItemType Directory -Path e:\nginx\conf\ssl
 New-Item -ItemType Directory -Path e:\nginx\html\.well-known
 
