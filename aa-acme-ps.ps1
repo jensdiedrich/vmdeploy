@@ -59,7 +59,7 @@ Param (
     [Parameter()]
     [string] $KeyVaultCertificateSecretName,
     [Parameter()]
-    [bool] $Test = $true,
+    [bool] $Staging = $true,
     [Parameter()]
     [bool] $VerboseOutput = $true
 )
@@ -149,10 +149,10 @@ function New-AccountProvisioning {
         [Parameter(Mandatory=$True)]
         [string[]] $ContactEmails,
         [Parameter()]
-        [switch] $Test
+        [switch] $Staging
     )
 
-    if ($Test) {
+    if ($Staging) {
         $serviceName = "LetsEncrypt-Staging"
     }
     else {
@@ -322,7 +322,7 @@ try {
         
         
         $mainDir = Join-Path $env:TEMP "LetsEncrypt"
-        if ($Test) {
+        if ($Staging) {
             $stateDir = Join-Path $mainDir "Staging"
         }
         else {
@@ -330,7 +330,7 @@ try {
         }
 
         $keyVaultCertificateName = (($DnsName.Replace("*","wildcard")).Replace(".","-")).ToLowerInvariant()
-        if ($Test) {
+        if ($Staging) {
             $keyVaultCertificateName += "-test"
         }
         Write-Output "-- Fetching the certificate password from Key Vault --"
@@ -341,7 +341,7 @@ try {
         $storageAccountKey = (Get-AzStorageAccountKey -ResourceGroupName $StorageAccountResourceGroupName -Name $StorageAccountName | Where-Object { $_.KeyName -eq "key1" } | Select-Object Value).Value
 
         Write-Output "-- Fetching the state directory from storage --"
-        if($Test) {
+        if($Staging) {
             Get-DirectoryFromAzureStorage -DestinationPath $mainDir `
                                         -StorageAccountSubscriptionId $StorageAccountSubscriptionId `
                                         -StorageAccountResourceGroupName $StorageAccountResourceGroupName `
@@ -363,7 +363,7 @@ try {
         $isNew = (Test-Path $stateDir) -eq $false
         if ($isNew) {
             Write-Output "-- Directory is empty. Adding a new account --"
-            $state = New-AccountProvisioning -StateDir $stateDir -ContactEmails $ContactEmails -Test:$Test
+            $state = New-AccountProvisioning -StateDir $stateDir -ContactEmails $ContactEmails -Test:$Staging
 
             Write-Output "-- Saving the state directory to storage --"
             Add-DirectoryToAzureStorage -Path $mainDir `
@@ -487,7 +487,7 @@ try {
         Remove-Item -Path $certificateExportPath -Force | Out-Null
         Remove-Item -Path $certificateKeyExportPath -Force | Out-Null
 
-        if ($Test -eq $False) {
+        if ($Staging -eq $False) {
             Write-Output "-- Saving the state directory to storage --"
             Add-DirectoryToAzureStorage -Path $mainDir `
                                         -StorageAccountName $StorageAccountName `
