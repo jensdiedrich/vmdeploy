@@ -30,7 +30,7 @@
     Specifies the name of the container in the blob storage where the state data is stored. Defaults to letsencrypt.
 .PARAMETER KeyVaultCertificateSecretName
     Specifies the key vault secret name of the certificate password that will be used to export the certificate once it has been issued by Let's Encrypt
-.PARAMETER Test
+.PARAMETER Staging
     Specifies whether to use lets encrypt staging/test facily or production facility.
 .PARAMETER VerboseOutput
     Specifies whether to set the VerbosePreference to continue
@@ -125,7 +125,6 @@ function Get-DirectoryFromAzureStorage {
     else {
         $context = New-AzStorageContext -StorageAccountName $StorageAccountName -StorageAccountKey $StorageAccountKey
     }
-
     if ([string]::IsNullOrWhiteSpace($BlobName)) {
         $items = Get-AzStorageBlob -Container $ContainerName -Context $context
     }
@@ -363,7 +362,7 @@ try {
         $isNew = (Test-Path $stateDir) -eq $false
         if ($isNew) {
             Write-Output "-- Directory is empty. Adding a new account --"
-            $state = New-AccountProvisioning -StateDir $stateDir -ContactEmails $ContactEmails -Test:$Staging
+            $state = New-AccountProvisioning -StateDir $stateDir -ContactEmails $ContactEmails -Staging:$Staging
 
             Write-Output "-- Saving the state directory to storage --"
             Add-DirectoryToAzureStorage -Path $mainDir `
