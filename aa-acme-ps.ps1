@@ -171,6 +171,7 @@ function New-AccountProvisioning {
     New-ACMEAccountKey -State $state
 
     # Register the account key with the acme service. The account key will automatically be read from the state
+    Write-Output "Create new ACME account with EMails: $ContactEmails"
     New-ACMEAccount -State $state -EmailAddresses $ContactEmails -AcceptTOS
 
     return $state
