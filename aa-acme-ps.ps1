@@ -288,7 +288,8 @@ try {
         if ([string]::IsNullOrWhiteSpace($KeyVaultCertificateSecretName)) {
             $KeyVaultCertificateSecretName = Get-AutomationVariable -Name "KeyVaultCertificateSecretName"
         }
-
+        Write-Output "Using the following settings"
+        Write-Output "ContactEmails: $ContactEmails"
 
         
             
