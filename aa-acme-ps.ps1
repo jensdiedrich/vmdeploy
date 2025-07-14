@@ -289,9 +289,17 @@ try {
             $KeyVaultCertificateSecretName = Get-AutomationVariable -Name "KeyVaultCertificateSecretName"
         }
         Write-Output "Using the following settings"
+        Write-Output "DefaultSubscriptionId: $DefaultSubscriptionId"
         Write-Output "ContactEmails: $ContactEmails"
+        Write-Output "DnsZoneResourceId: $DnsZoneResourceId"
+        Write-Output "StorageAccountResourceId: $StorageAccountResourceId"
+        Write-Output "DefaultResourceGroupName: $DefaultResourceGroupName"
+        Write-Output "DefaultStorageAccountName: $DefaultStorageAccountName"
+        Write-Output "DnsName: $DnsName"
+        Write-Output "KeyVaultName: $KeyVaultName"
+        Write-Output "StorageContainerName: $StorageContainerName"
+        Write-Output "KeyVaultCertificateSecretName: $KeyVaultCertificateSecretName"
 
-        
             
         # Ensures that any credentials apply only to the execution of this runbook
         Disable-AzContextAutosave -Scope Process | Out-Null
