@@ -290,7 +290,7 @@ try {
         }
         Write-Output "Using the following settings"
         Write-Output "DefaultSubscriptionId: $DefaultSubscriptionId"
-        Write-Output "ContactEmails: ($ContactEmails).split(",")"
+        Write-Output "ContactEmails: $(($ContactEmails).split(","))"
         Write-Output "DnsZoneResourceId: $DnsZoneResourceId"
         Write-Output "StorageAccountResourceId: $StorageAccountResourceId"
         Write-Output "DefaultResourceGroupName: $DefaultResourceGroupName"
