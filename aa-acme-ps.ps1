@@ -372,7 +372,7 @@ try {
         $isNew = (Test-Path $stateDir) -eq $false
         if ($isNew) {
             Write-Output "-- Directory is empty. Adding a new account --"
-            $state = New-AccountProvisioning -StateDir $stateDir -ContactEmails $ContactEmails -Staging:$Staging
+            $state = New-AccountProvisioning -StateDir $stateDir -ContactEmails $ContactEmails.split(",") -Staging:$Staging
 
             Write-Output "-- Saving the state directory to storage --"
             Add-DirectoryToAzureStorage -Path $mainDir `
