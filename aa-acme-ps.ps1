@@ -49,7 +49,7 @@ Param (
     [Parameter()]
     [string] $DefaultStorageAccountName,
     [Parameter()]
-    [string[]] $ContactEmails,
+    [string] $ContactEmails,
     [Parameter()]
     [string] $DnsName,
     [Parameter()]
@@ -290,7 +290,7 @@ try {
         }
         Write-Output "Using the following settings"
         Write-Output "DefaultSubscriptionId: $DefaultSubscriptionId"
-        Write-Output "ContactEmails: $ContactEmails"
+        Write-Output "ContactEmails: ($ContactEmails).split(",")"
         Write-Output "DnsZoneResourceId: $DnsZoneResourceId"
         Write-Output "StorageAccountResourceId: $StorageAccountResourceId"
         Write-Output "DefaultResourceGroupName: $DefaultResourceGroupName"
