@@ -388,6 +388,7 @@ try {
 
         # It might be neccessary to acquire a new nonce, so we'll just do it for the sake.
         Write-Output "-- Acquiring new nonce --"
+        $state = Get-ACMEState -Path $stateDir
         New-ACMENonce -State $state
 
         # Create the identifier for the DNS name
