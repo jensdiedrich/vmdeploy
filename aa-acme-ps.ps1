@@ -59,7 +59,7 @@ Param (
     [Parameter()]
     [string] $KeyVaultCertificateSecretName,
     [Parameter()]
-    [bool] $Staging = $true,
+    [bool] $Staging,
     [Parameter()]
     [bool] $VerboseOutput = $true
 )
