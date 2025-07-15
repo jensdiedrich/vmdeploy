@@ -299,6 +299,7 @@ try {
         Write-Output "KeyVaultName: $KeyVaultName"
         Write-Output "StorageContainerName: $StorageContainerName"
         Write-Output "KeyVaultCertificateSecretName: $KeyVaultCertificateSecretName"
+        Write-Output "Staging: $Staging"
 
             
         # Ensures that any credentials apply only to the execution of this runbook
