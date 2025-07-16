@@ -59,7 +59,7 @@ Param (
     [Parameter()]
     [string] $KeyVaultCertificateSecretName,
     [Parameter()]
-    [bool] $Staging,
+    [string] $Staging,
     [Parameter()]
     [bool] $VerboseOutput = $true
 )
@@ -291,7 +291,9 @@ try {
 
         if ([string]::IsNullOrWhiteSpace($Staging)) {
             $Staging = Get-AutomationVariable -Name "Staging"
+            $Staging = [System.Convert]::ToBoolean($Staging)
         }
+
         Write-Output "Using the following settings"
         Write-Output "DefaultSubscriptionId: $DefaultSubscriptionId"
         Write-Output "ContactEmails: $(($ContactEmails).split(","))"
