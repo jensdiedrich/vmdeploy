@@ -288,6 +288,10 @@ try {
         if ([string]::IsNullOrWhiteSpace($KeyVaultCertificateSecretName)) {
             $KeyVaultCertificateSecretName = Get-AutomationVariable -Name "KeyVaultCertificateSecretName"
         }
+
+        if ([string]::IsNullOrWhiteSpace($Staging)) {
+            $KeyVaultCertificateSecretName = Get-AutomationVariable -Name "Staging"
+        }
         Write-Output "Using the following settings"
         Write-Output "DefaultSubscriptionId: $DefaultSubscriptionId"
         Write-Output "ContactEmails: $(($ContactEmails).split(","))"
