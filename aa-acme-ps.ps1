@@ -290,7 +290,7 @@ try {
         }
 
         if ([string]::IsNullOrWhiteSpace($Staging)) {
-            $KeyVaultCertificateSecretName = Get-AutomationVariable -Name "Staging"
+            $Staging = Get-AutomationVariable -Name "Staging"
         }
         Write-Output "Using the following settings"
         Write-Output "DefaultSubscriptionId: $DefaultSubscriptionId"
