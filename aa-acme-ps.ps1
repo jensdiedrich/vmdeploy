@@ -59,7 +59,7 @@ Param (
     [Parameter()]
     [string] $KeyVaultCertificateSecretName,
     [Parameter()]
-    [string] $Staging,
+    [bool] $Staging = $true,
     [Parameter()]
     [bool] $VerboseOutput = $true
 )
@@ -289,12 +289,6 @@ try {
             $KeyVaultCertificateSecretName = Get-AutomationVariable -Name "KeyVaultCertificateSecretName"
         }
 
-        if ([string]::IsNullOrWhiteSpace($Staging)) {
-            $Staging = Get-AutomationVariable -Name "Staging"
-            
-        }
-
-        $Staging = [System.Convert]::ToBoolean($Staging)
 
         Write-Output "Using the following settings"
         Write-Output "DefaultSubscriptionId: $DefaultSubscriptionId"
@@ -308,7 +302,6 @@ try {
         Write-Output "StorageContainerName: $StorageContainerName"
         Write-Output "KeyVaultCertificateSecretName: $KeyVaultCertificateSecretName"
         Write-Output "Staging: $Staging"
-        Write-Output "Staging Type: $($Staging.GetType())"
 
             
         # Ensures that any credentials apply only to the execution of this runbook
