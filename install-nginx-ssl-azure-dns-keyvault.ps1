@@ -92,7 +92,7 @@ New-Item -ItemType Directory -Path e:\nginx\html\.well-known
 e:\simple-acme\wacs.exe --baseuri https://acme-staging-v02.api.letsencrypt.org/directory --verbose `
  --accepttos --emailaddress noreply@noreply.org --source manual --host $hostname --validationmode dns-01 --validation azure  `
  --store pemfiles,keyvault --pemfilespath e:\nginx\conf\ssl --pemfilesname $hostname `
- --vaultname $keyVaultName --certificatename $hostname.Replace('.','-') `
+ --vaultname $keyVaultName --certificatename $hostname.Replace('.','-').Replace('*','_') `
  --azuretenantid $tenantId --azuresubscriptionid $subscriptionId --azureusemsi
 
 # e:\simple-acme\wacs.exe --verbose `
@@ -140,8 +140,8 @@ http {
     server {
         listen       $FirstIp`:443 ssl;
         
-        ssl_certificate      ssl/$hostname-chain.pem;
-        ssl_certificate_key  ssl/$hostname-key.pem;
+        ssl_certificate      ssl/$($hostname.Replace('*','_'))-chain.pem;
+        ssl_certificate_key  ssl/$($hostname.Replace('*','_'))-key.pem;
 
         ssl_session_cache    shared:SSL:1m;
         ssl_session_timeout  5m;
