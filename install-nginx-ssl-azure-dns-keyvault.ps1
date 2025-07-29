@@ -9,7 +9,9 @@ param(
     [Parameter(Mandatory)]
     [string]$tenantId,
     [Parameter(Mandatory)]
-    [string]$subscriptionId
+    [string]$subscriptionId,
+    [Parameter()]
+    [bool]$Staging = $true
 )
 
 Start-Transcript -Path "e:\install-nginx.log" -Append
@@ -89,7 +91,14 @@ Expand-Archive e:\simple-acme-keyvault-plugin.zip e:\simple-acme
 New-Item -ItemType Directory -Path e:\nginx\conf\ssl
 New-Item -ItemType Directory -Path e:\nginx\html\.well-known
 
-e:\simple-acme\wacs.exe --baseuri https://acme-staging-v02.api.letsencrypt.org/directory --verbose `
+if ($Staging) {
+        $baseUri = "https://acme-staging-v02.api.letsencrypt.org"
+    }
+    else {
+        $baseUri = "https://acme-v02.api.letsencrypt.org"
+    }
+
+e:\simple-acme\wacs.exe --baseuri $baseUri --verbose `
  --accepttos --emailaddress noreply@noreply.org --source manual --host $hostname --validationmode dns-01 --validation azure  `
  --store pemfiles,keyvault --pemfilespath e:\nginx\conf\ssl --pemfilesname $hostname `
  --vaultname $keyVaultName --certificatename $hostname.Replace('.','-').Replace('*','wildcard') `
