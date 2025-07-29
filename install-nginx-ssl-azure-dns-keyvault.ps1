@@ -93,14 +93,18 @@ New-Item -ItemType Directory -Path e:\nginx\html\.well-known
 
 if ($Staging) {
         $baseUri = "https://acme-staging-v02.api.letsencrypt.org"
+        $certificatename = "$hostname.Replace('.','-').Replace('*','wildcard')-test"
+        $pemfilesname = "$hostname-test"
     }
     else {
         $baseUri = "https://acme-v02.api.letsencrypt.org"
+        $certificatename = "$hostname.Replace('.','-').Replace('*','wildcard')"
+        $pemfilesname = "$hostname"
     }
 
 e:\simple-acme\wacs.exe --baseuri $baseUri --verbose `
  --accepttos --emailaddress noreply@noreply.org --source manual --host $hostname --validationmode dns-01 --validation azure  `
- --store pemfiles,keyvault --pemfilespath e:\nginx\conf\ssl --pemfilesname $hostname `
+ --store pemfiles,keyvault --pemfilespath e:\nginx\conf\ssl --pemfilesname $pemfilesname `
  --vaultname $keyVaultName --certificatename $hostname.Replace('.','-').Replace('*','wildcard') `
  --azuretenantid $tenantId --azuresubscriptionid $subscriptionId --azureusemsi
 
