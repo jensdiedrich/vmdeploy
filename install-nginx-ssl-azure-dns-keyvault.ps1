@@ -105,7 +105,7 @@ if ($Staging) {
 e:\simple-acme\wacs.exe --baseuri $baseUri --verbose `
  --accepttos --emailaddress noreply@noreply.org --source manual --host $hostname --validationmode dns-01 --validation azure  `
  --store pemfiles,keyvault --pemfilespath e:\nginx\conf\ssl --pemfilesname $pemfilesname `
- --vaultname $keyVaultName --certificatename $hostname.Replace('.','-').Replace('*','wildcard') `
+ --vaultname $keyVaultName --certificatename $certificatename `
  --azuretenantid $tenantId --azuresubscriptionid $subscriptionId --azureusemsi
 
 # e:\simple-acme\wacs.exe --verbose `
