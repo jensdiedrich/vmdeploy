@@ -93,7 +93,7 @@ New-Item -ItemType Directory -Path e:\nginx\html\.well-known
 
 if ($Staging -eq "disabled" ) {
         $baseUri = "https://acme-v02.api.letsencrypt.org"
-        $certificatename = "$hostname.Replace('.','-').Replace('*','wildcard')"
+        $certificatename = $hostname.Replace('.','-').Replace('*','wildcard')
         $pemfilesname = "$hostname"
     }
     else {
