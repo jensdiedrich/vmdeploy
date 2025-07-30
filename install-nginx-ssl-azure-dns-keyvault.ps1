@@ -11,7 +11,7 @@ param(
     [Parameter(Mandatory)]
     [string]$subscriptionId,
     [Parameter()]
-    [bool]$Staging = $true
+    [string]$Staging = 'enabled'
 )
 
 Start-Transcript -Path "e:\install-nginx.log" -Append
@@ -91,15 +91,16 @@ Expand-Archive e:\simple-acme-keyvault-plugin.zip e:\simple-acme
 New-Item -ItemType Directory -Path e:\nginx\conf\ssl
 New-Item -ItemType Directory -Path e:\nginx\html\.well-known
 
-if ($Staging) {
-        $baseUri = "https://acme-staging-v02.api.letsencrypt.org"
-        $certificatename = $hostname.Replace('.','-').Replace('*','wildcard') + '-test'
-        $pemfilesname = "$hostname-test"
-    }
-    else {
+if ($Staging -eq "disabled" ) {
         $baseUri = "https://acme-v02.api.letsencrypt.org"
         $certificatename = "$hostname.Replace('.','-').Replace('*','wildcard')"
         $pemfilesname = "$hostname"
+    }
+    else {
+        $baseUri = "https://acme-staging-v02.api.letsencrypt.org"
+        $certificatename = $hostname.Replace('.','-').Replace('*','wildcard') + '-test'
+        $pemfilesname = "$hostname-test"
+        
     }
 
 e:\simple-acme\wacs.exe --baseuri $baseUri --verbose `
