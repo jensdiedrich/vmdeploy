@@ -298,7 +298,7 @@ try {
         Write-Output "StorageAccountResourceId: $StorageAccountResourceId"
         Write-Output "DefaultResourceGroupName: $DefaultResourceGroupName"
         Write-Output "DefaultStorageAccountName: $DefaultStorageAccountName"
-        Write-Output "DnsNamesArray: $DnsNamesArray
+        Write-Output "DnsNamesArray: $DnsNamesArray"
         Write-Output "KeyVaultName: $KeyVaultName"
         Write-Output "StorageContainerName: $StorageContainerName"
         Write-Output "KeyVaultCertificateSecretName: $KeyVaultCertificateSecretName"
