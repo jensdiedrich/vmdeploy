@@ -464,7 +464,7 @@ try {
 
         # We should have a valid order now and should be able to complete it, therefore we need a certificate key
         Write-Output "-- Grabbing the certificate key --"
-        $certificateKeyExportPath = Join-Path $stateDir "$DnsNamesArray[0].key.xml".Replace("*","wildcard")
+        $certificateKeyExportPath = Join-Path $stateDir "$($DnsNamesArray[0]).key.xml".Replace("*","wildcard")
         if (Test-Path $certificateKeyExportPath) {
             Remove-Item -Path $certificateKeyExportPath
         }
@@ -483,7 +483,7 @@ try {
 
         # As soon as the url shows up we can create the PFX
         Write-Output "-- Exporting the certificate to the filesystem --"
-        $certificateExportPath = Join-Path $stateDir "$DnsNamesArray[0].pfx".Replace("*","wildcard")
+        $certificateExportPath = Join-Path $stateDir "$($DnsNamesArray[0]).pfx".Replace("*","wildcard")
         Export-ACMECertificate -State $state -Order $order -CertificateKey $certKey -Path $certificateExportPath -Password $certificatePassword
 
         # Remove the TXT Record
