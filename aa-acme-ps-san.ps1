@@ -21,8 +21,8 @@
     Specifies the default storage account name to use to store the state of the letsencrypt account(s), if not in different subscriptins or resource groups.
 .PARAMETER ContactEmails
     Specifies the contact emails to use when creating a new lets encrypt account is created.
-.PARAMETER DnsName
-    Specifies the dns that a certificate needs to be created for.
+.PARAMETER DnsNames
+    Specifies the dns names (SAN) that a certificate needs to be created for.
     For wildcards, use *.hostname.tld
 .PARAMETER KeyVaultName
     Specifies the name of the keyvault where the certificate will be stored.
@@ -51,7 +51,7 @@ Param (
     [Parameter()]
     [string] $ContactEmails,
     [Parameter()]
-    [string] $DnsName,
+    [string] $DnsNames,
     [Parameter()]
     [string] $KeyVaultName,
     [Parameter()]
@@ -273,8 +273,8 @@ try {
             $ContactEmails = Get-AutomationVariable -Name "ContactEmails"
         }
 
-        if ([string]::IsNullOrWhiteSpace($DnsName)) {
-            $DnsName = Get-AutomationVariable -Name "DnsName"
+        if ([string]::IsNullOrWhiteSpace($DnsNames)) {
+            $DnsNames = Get-AutomationVariable -Name "DnsNames"
         }
 
         if ([string]::IsNullOrWhiteSpace($KeyVaultName)) {
@@ -289,6 +289,7 @@ try {
             $KeyVaultCertificateSecretName = Get-AutomationVariable -Name "KeyVaultCertificateSecretName"
         }
 
+        $DnsNamesArray = ($DnsNames).split(",")
 
         Write-Output "Using the following settings"
         Write-Output "DefaultSubscriptionId: $DefaultSubscriptionId"
@@ -297,7 +298,7 @@ try {
         Write-Output "StorageAccountResourceId: $StorageAccountResourceId"
         Write-Output "DefaultResourceGroupName: $DefaultResourceGroupName"
         Write-Output "DefaultStorageAccountName: $DefaultStorageAccountName"
-        Write-Output "DnsName: $DnsName"
+        Write-Output "DnsNamesArray: $DnsNamesArray
         Write-Output "KeyVaultName: $KeyVaultName"
         Write-Output "StorageContainerName: $StorageContainerName"
         Write-Output "KeyVaultCertificateSecretName: $KeyVaultCertificateSecretName"
@@ -341,7 +342,7 @@ try {
             $stateDir = Join-Path $mainDir "Prod"
         }
 
-        $keyVaultCertificateName = (($DnsName.Replace("*","wildcard")).Replace(".","-")).ToLowerInvariant()
+        $keyVaultCertificateName = (($DnsNamesArray[0].Replace("*","wildcard")).Replace(".","-")).ToLowerInvariant()
         if ($Staging) {
             $keyVaultCertificateName += "-test"
         }
@@ -396,11 +397,12 @@ try {
 
         # Create the identifier for the DNS name
         Write-Output "-- Create new DNS identifier --"
-        $identifier = New-ACMEIdentifier $DnsName
+        #$identifiers = New-ACMEIdentifier $DnsNamesArray
+        $identifiers = $DnsNamesArray | ForEach-Object { New-ACMEIdentifier $_ };
 
         # Create the order object at the ACME service.
         Write-Output "-- Creating a new order --"
-        $order = New-ACMEOrder -State $state -Identifiers $identifier
+        $order = New-ACMEOrder -State $state -Identifiers $identifiers
 
         # Fetch the authorizations for that order
         Write-Output "-- Fetching the authorizations for the order --"
@@ -420,7 +422,7 @@ try {
         # Insert the data into the proper TXT record
         $splitDomainParts = $challengeTxtRecordName -split "\."
         $dnsZoneName = "{0}.{1}" -f $splitDomainParts[$splitDomainParts.Length-2], $splitDomainParts[$splitDomainParts.Length-1]
-        $isWildcard = $DnsName.StartsWith("*.")
+        $isWildcard = $DnsNamesArray[0].StartsWith("*.")
 
         Write-Output "-- Adding the txt record --"
         # Remove the TXT record in case it is already there
@@ -462,7 +464,7 @@ try {
 
         # We should have a valid order now and should be able to complete it, therefore we need a certificate key
         Write-Output "-- Grabbing the certificate key --"
-        $certificateKeyExportPath = Join-Path $stateDir "$DnsName.key.xml".Replace("*","wildcard")
+        $certificateKeyExportPath = Join-Path $stateDir "$DnsNamesArray[0].key.xml".Replace("*","wildcard")
         if (Test-Path $certificateKeyExportPath) {
             Remove-Item -Path $certificateKeyExportPath
         }
@@ -481,7 +483,7 @@ try {
 
         # As soon as the url shows up we can create the PFX
         Write-Output "-- Exporting the certificate to the filesystem --"
-        $certificateExportPath = Join-Path $stateDir "$DnsName.pfx".Replace("*","wildcard")
+        $certificateExportPath = Join-Path $stateDir "$DnsNamesArray[0].pfx".Replace("*","wildcard")
         Export-ACMECertificate -State $state -Order $order -CertificateKey $certKey -Path $certificateExportPath -Password $certificatePassword
 
         # Remove the TXT Record
