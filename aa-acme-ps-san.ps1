@@ -398,52 +398,56 @@ try {
         # Create the identifier for the DNS name
         Write-Output "-- Create new DNS identifier --"
         #$identifiers = New-ACMEIdentifier $DnsNamesArray
-        $identifiers = $DnsNamesArray | ForEach-Object { New-ACMEIdentifier $_ };
+        $dnsIdentifiers = $DnsNamesArray | ForEach-Object { New-ACMEIdentifier $_ };
 
         # Create the order object at the ACME service.
         Write-Output "-- Creating a new order --"
-        $order = New-ACMEOrder -State $state -Identifiers $identifiers
+        $order = New-ACMEOrder -State $state -Identifiers $dnsIdentifiers
 
         # Fetch the authorizations for that order
         Write-Output "-- Fetching the authorizations for the order --"
-        $authZ = Get-ACMEAuthorization -State $state -Order $order
+        $authorizations = @(Get-ACMEAuthorization -State $state -Order $order)
 
-        # Select a challenge to fullfill
-        Write-Output "-- Getting the challenge --"
-        $challenge = Get-ACMEChallenge -State $state -Authorization $authZ -Type "dns-01"
+        foreach ($authz in $authorizations) {
 
-        # Inspect the challenge data
-        Write-Output "-- Dumping the challenge data --"
-        $challenge.Data
+            # Select a challenge to fullfill
+            Write-Output "-- Getting the challenge:  --"
+            $challenge = Get-ACMEChallenge -State $state -Authorization $authZ -Type "dns-01"
 
-        $challengeTxtRecordName = $challenge.Data.TxtRecordName
-        $challengeToken = $challenge.Data.Content
+            # Inspect the challenge data
+            Write-Output "-- Dumping the challenge data --"
+            $challenge.Data
 
-        # Insert the data into the proper TXT record
-        $splitDomainParts = $challengeTxtRecordName -split "\."
-        $dnsZoneName = "{0}.{1}" -f $splitDomainParts[$splitDomainParts.Length-2], $splitDomainParts[$splitDomainParts.Length-1]
-        $isWildcard = $DnsNamesArray[0].StartsWith("*.")
+            $challengeTxtRecordName = $challenge.Data.TxtRecordName
+            $challengeToken = $challenge.Data.Content
 
-        Write-Output "-- Adding the txt record --"
-        # Remove the TXT record in case it is already there
-        Remove-TxtRecordToDns -SubscriptionId $DnsSubscriptionId `
-                            -ResourceGroupName $DnsResourceGroupName `
-                            -DnsZoneName $dnsZoneName `
-                            -TxtName $challengeTxtRecordName
+            # Insert the data into the proper TXT record
+            $splitDomainParts = $challengeTxtRecordName -split "\."
+            $dnsZoneName = "{0}.{1}" -f $splitDomainParts[$splitDomainParts.Length-2], $splitDomainParts[$splitDomainParts.Length-1]
+            $isWildcard = $DnsNamesArray[0].StartsWith("*.")
 
-        Add-TxtRecordToDns -SubscriptionId $DnsSubscriptionId `
-                            -ResourceGroupName $DnsResourceGroupName `
-                            -DnsZoneName $dnsZoneName `
-                            -TxtName $challengeTxtRecordName `
-                            -TxtValue $challengeToken `
-                            -IsWildcard:$isWildcard
+            Write-Output "-- Adding the txt record --"
+            # Remove the TXT record in case it is already there
+            Remove-TxtRecordToDns -SubscriptionId $DnsSubscriptionId `
+                                -ResourceGroupName $DnsResourceGroupName `
+                                -DnsZoneName $dnsZoneName `
+                                -TxtName $challengeTxtRecordName
 
-        # Wait 5 seconds for the DNS to set
-        Start-Sleep -Seconds 5
+            Add-TxtRecordToDns -SubscriptionId $DnsSubscriptionId `
+                                -ResourceGroupName $DnsResourceGroupName `
+                                -DnsZoneName $dnsZoneName `
+                                -TxtName $challengeTxtRecordName `
+                                -TxtValue $challengeToken `
+                                -IsWildcard:$isWildcard
 
-        # Signal the ACME server that the challenge is ready
-        Write-Output "-- Signaling the challenge as ready --"
-        $challenge | Complete-ACMEChallenge -State $state
+            # Wait 5 seconds for the DNS to set
+            Start-Sleep -Seconds 5
+
+            # Signal the ACME server that the challenge is ready
+            Write-Output "-- Signaling the challenge as ready --"
+            $challenge | Complete-ACMEChallenge -State $state
+
+        }
 
         # Wait a little bit and update the order, until we see the states
         $tries = 1
