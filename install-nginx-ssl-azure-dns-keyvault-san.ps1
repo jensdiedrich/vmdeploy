@@ -11,8 +11,13 @@ param(
     [Parameter(Mandatory)]
     [string]$subscriptionId,
     [Parameter()]
+    [int]$delay = 0,
+    [Parameter()]
     [string]$Staging = 'enabled'
 )
+
+# Delay if script runs in parallel on multiple vms
+Start-Sleep ($delay * 120)
 
 Start-Transcript -Path "e:\install-nginx.log" -Append
 
