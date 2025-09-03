@@ -17,7 +17,10 @@ param(
 )
 
 # Delay if script runs in parallel on multiple vms
+"delay: $($delay * 120)" | out-file -append c:\temp\delay.txt
+"before delay: $(get-date)" | out-file -append c:\temp\delay.txt
 Start-Sleep ($delay * 120)
+"after delay: $(get-date)" | out-file -append c:\temp\delay.txt
 
 Start-Transcript -Path "e:\install-nginx.log" -Append
 
